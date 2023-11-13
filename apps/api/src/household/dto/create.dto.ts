@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
 class CreateHouseholdRequest {
@@ -21,5 +21,8 @@ class CreateHouseholdResponse {
   @IsOptional()
   image: string;
 }
+class UpdateHouseholdRequest extends PartialType(CreateHouseholdRequest){
 
-export { CreateHouseholdRequest, CreateHouseholdResponse };
+}
+
+export { CreateHouseholdRequest, CreateHouseholdResponse,UpdateHouseholdRequest };

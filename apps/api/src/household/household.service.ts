@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma';
 import { CurrentUserData } from '../iam/auth/interfaces';
 
-import { CreateHouseholdRequest, CreateHouseholdResponse } from './dto';
+import { CreateHouseholdRequest, CreateHouseholdResponse, UpdateHouseholdRequest } from './dto';
 
 @Injectable()
 class HouseholdService {
@@ -37,6 +37,21 @@ class HouseholdService {
       this.logger.error(err);
       throw err;
     }
+  }
+
+
+
+  async update(
+    data: UpdateHouseholdRequest,
+    householdId: string
+  ):Promise<CreateHouseholdResponse>{
+
+    const household = await this.prismaService.household.update({
+      where :{id:householdId},
+      data:data
+
+    })
+    return household;
   }
 }
 
