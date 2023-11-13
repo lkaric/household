@@ -48,7 +48,9 @@ class AuthService {
 
       const user = await this.prismaService.user.create({ data });
 
-      return user;
+      const tokens = await this.generateTokenPair(user);
+
+      return tokens;
     } catch (err) {
       this.logger.error(err);
 
