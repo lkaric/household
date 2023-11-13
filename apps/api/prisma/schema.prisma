@@ -7,16 +7,54 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Household {
+  id    String  @id @default(cuid())
+  name  String
+  image String?
+
+  users HouseholdUser[]
+
+  createdAt DateTime @default(now())
+  createdBy String?
+
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  deletedAt DateTime?
+
+  @@map("households")
+}
+
+enum HouseholdRole {
+  HOUSEHOLD_OWNER
+  HOUSEHOLD_MEMBER
+}
+
+model HouseholdUser {
+  household   Household @relation(fields: [householdId], references: [id])
+  householdId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  role HouseholdRole @default(HOUSEHOLD_MEMBER)
+
+  @@id([householdId, userId])
+  @@map("households_users")
+}
+
 model User {
-  id        String  @id @default(cuid()) 
+  id        String  @id @default(cuid())
   email     String  @unique
   password  String?
-  firstName String  
-  lastName  String 
-  phone     String? 
+  firstName String
+  lastName  String
+  phone     String?
 
   emailVerified Boolean @default(false)
   phoneVerified Boolean @default(false)
+
+  households HouseholdUser[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
