@@ -11,9 +11,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Setup NX
-        uses: nrwl/nx-set-shas@v3
+      - name: Derive appropriate NX SHAs
+        uses: nrwl/nx-set-shas@v4
+        with:
+          main-branch-name: 'master'
 
       - name: Install & Cache
         uses: ./.github/actions/setup
@@ -24,18 +28,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Derive appropriate NX SHAs
+        uses: nrwl/nx-set-shas@v4
+        with:
+          main-branch-name: 'master'
 
       - name: Setup
         uses: ./.github/actions/setup
-
-      - name: Setup NX
-        uses: nrwl/nx-set-shas@v3
-
-      - name: Track "master"
-        run: |
-          git fetch --all
-          git branch --track master origin/master
-        if: github.event_name == 'pull_request'
 
       - name: Check
         run: pnpx nx format:check
@@ -45,20 +47,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Derive appropriate NX SHAs
+        uses: nrwl/nx-set-shas@v4
+        with:
+          main-branch-name: 'master'
 
       - name: Setup
         uses: ./.github/actions/setup
-
-      - name: Setup NX
-        uses: nrwl/nx-set-shas@v3
-
-      - name: Track "master"
-        run: |
-          git fetch --all
-          git branch --track master origin/master
-        if: github.event_name == 'pull_request'
-
-      - uses: nrwl/nx-set-shas@v3
 
       - name: Check
         run: pnpx nx affected -t lint
@@ -69,18 +67,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Derive appropriate NX SHAs
+        uses: nrwl/nx-set-shas@v4
+        with:
+          main-branch-name: 'master'
 
       - name: Setup
         uses: ./.github/actions/setup
-
-      - name: Setup NX
-        uses: nrwl/nx-set-shas@v3
-
-      - name: Track "master"
-        run: |
-          git fetch --all
-          git branch --track master origin/master
-        if: github.event_name == 'pull_request'
 
       - name: Check
         run: pnpx nx affected -t test
@@ -91,18 +87,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Derive appropriate NX SHAs
+        uses: nrwl/nx-set-shas@v4
+        with:
+          main-branch-name: 'master'
 
       - name: Setup
         uses: ./.github/actions/setup
-
-      - name: Setup NX
-        uses: nrwl/nx-set-shas@v3
-
-      - name: Track "master"
-        run: |
-          git fetch --all
-          git branch --track master origin/master
-        if: github.event_name == 'pull_request'
 
       - name: Check
         run: pnpx nx affected -t build
