@@ -34,6 +34,9 @@ export class RedisService
   public async insert(key: string, value: string): Promise<void> {
     await this.redisClient.set(key, value);
   }
+  public async insertExpire(key: string, value: string,expire: number): Promise<void> {
+    await this.redisClient.set(key, value,"EX",expire);
+  }
 
   public async get(key: string): Promise<string> {
     const data = this.redisClient.get(key);

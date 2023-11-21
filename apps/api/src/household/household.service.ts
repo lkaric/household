@@ -67,7 +67,7 @@ class HouseholdService {
       id: id,
       email:inv.email
     }
-    await this.redisService.insert(token,JSON.stringify(redisInv));
+    await this.redisService.insertExpire(token,JSON.stringify(redisInv),86400);
 
     //send email with url
     return{value:await this.redisService.get(token),
@@ -89,7 +89,6 @@ class HouseholdService {
     })
     if( await this.redisService.areStringsEqual(token,redisExpected)&& accept =="accept"){
       
-      //find how to add household to user
       //create householdUser and assign user and household to it
   
       let user= await this.prismaService.user.findUnique({
