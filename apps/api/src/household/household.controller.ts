@@ -6,7 +6,7 @@ import { CurrentUserData } from '../iam/auth/interfaces';
 
 import { HouseholdService } from './household.service';
 
-import { CreateHouseholdRequest, CreateHouseholdResponse, UpdateHouseholdRequest } from './dto';
+import { CreateHouseholdRequest, CreateHouseholdResponse, InviteHouseholdRequest, UpdateHouseholdRequest } from './dto';
 
 @ApiTags('Household')
 @ApiBearerAuth('JWT')
@@ -22,6 +22,8 @@ export class HouseholdController {
   ): Promise<CreateHouseholdResponse> {
     return this.householdService.create(body, cu);
   }
+
+
   @ApiResponse({status:HttpStatus.CREATED,type:UpdateHouseholdRequest  })
   @Put("/:id")
   @ApiParam({name:"id",required:true,description:"household id please"})
@@ -31,6 +33,29 @@ export class HouseholdController {
   ):Promise<CreateHouseholdResponse>{
     return  this.householdService.update(body,id);
   }
+
+
+  @Post("/:id/invite")
+  @ApiParam({name:"id",required:true,description:"household id please"})
+  invite(
+    @Param(){id},
+    @Body() invite : InviteHouseholdRequest,
+    @CurrentUser() cu: CurrentUserData
+  ):Promise<any>{
+   return  this.householdService.invite(cu,invite,id);
+  }
+  @Post("/:id/invite/:token/:accept")
+  @ApiParam({name:"id",required:true,description:"household id please"})
+  @ApiParam({name:"token",required:true,description:"token"},)
+  @ApiParam({name:"accept",required:true,description:"accept or decline"},)
+  acceptInvite(
+    @Param(){id,token,accept},
+    @CurrentUser() cu: CurrentUserData
+  ):Promise<any>{
+   return  this.householdService.handleInvite(cu,accept,id,token);
+  }
+
+
   
 
 }

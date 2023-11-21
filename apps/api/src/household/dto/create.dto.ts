@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 
 class CreateHouseholdRequest {
   @ApiProperty({ description: 'Household Name', example: "Lazar's Household" })
@@ -24,5 +24,10 @@ class CreateHouseholdResponse {
 class UpdateHouseholdRequest extends PartialType(CreateHouseholdRequest){
 
 }
+class InviteHouseholdRequest{
+  @ApiProperty({ description: 'Email', example: 'ivanstojkovic@ivan.com' })
+  @IsEmail()
+  email:string;
+}
 
-export { CreateHouseholdRequest, CreateHouseholdResponse,UpdateHouseholdRequest };
+export { CreateHouseholdRequest, CreateHouseholdResponse,UpdateHouseholdRequest,InviteHouseholdRequest};
