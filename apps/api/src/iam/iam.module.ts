@@ -12,6 +12,7 @@ import { AuthController } from './auth';
 import { AuthService } from './auth/services';
 import { JwtStrategy } from './auth/strategies';
 import { JwtGuard } from './auth/guards';
+import { HouseholdService } from '../household/household.service';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { JwtGuard } from './auth/guards';
       useClass: JwtGuard,
     },
     AuthService,
+    HouseholdService,
     JwtStrategy,
   ],
 })
