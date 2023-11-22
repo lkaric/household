@@ -62,20 +62,23 @@ class HouseholdService {
   }
 
   async invite(cu: CurrentUserData, inv: InviteHouseholdRequest, id: string) {
-    //insert inv token in redis
-    const token = crypto.randomBytes(64).toString('hex');
-    let redisInv = {
-      id: id,
-      email: inv.email,
-    };
-    await this.redisService.insertExpire(
-      token,
-      JSON.stringify(redisInv),
-      86400
-    );
+    try {
+      const token = crypto.randomBytes(64).toString('hex');
+      let redisInv = {
+        id: id,
+        email: inv.email,
+      };
+      await this.redisService.insertExpire(
+        token,
+        JSON.stringify(redisInv),
+        86400
+      );
+      return { value: await this.redisService.get(token), token: token };
+    } catch (err) {
+      this.logger.error(err);
 
-    //send email with url
-    return { value: await this.redisService.get(token), token: token };
+      throw err;
+    }
   }
 
   async handleInvite(
@@ -84,17 +87,24 @@ class HouseholdService {
     id: string,
     token: string
   ) {
-    let redisExpected = JSON.stringify({
-      id: id,
-      email: cu.email,
-    });
-    if (this.compareToken(id, cu.email, token) && accept == 'accept') {
-      //create householdUser and assign user and household to it
-      let ressponse = this.addUser(cu.email, id);
+    try {
+      let redisExpected = JSON.stringify({
+        id: id,
+        email: cu.email,
+      });
+      if (this.compareToken(id, cu.email, token) && accept == 'accept') {
+        //create householdUser and assign user and household to it
+        let ressponse = this.addUser(cu.email, id);
+        this.redisService.delete(token);
 
-      return ressponse;
-    } else {
-      return 'no';
+        return ressponse;
+      } else {
+        return 'no';
+      }
+    } catch (err) {
+      this.logger.error(err);
+
+      throw err;
     }
   }
   private async compareToken(
@@ -102,29 +112,48 @@ class HouseholdService {
     email: string,
     token: string
   ): Promise<boolean> {
-    let redisExpected = JSON.stringify({
-      id: id,
-      email: email,
-    });
-    return await this.redisService.areStringsEqual(token, redisExpected);
+    try {
+      let redisExpected = JSON.stringify({
+        id: id,
+        email: email,
+      });
+      return await this.redisService.areStringsEqual(token, redisExpected);
+    } catch (err) {
+      this.logger.error(err);
+
+      throw err;
+    }
   }
   async addUser(email: string, id: string) {
-    let user = await this.prismaService.user.findUnique({
-      where: {
-        email: email,
-      },
-    });
-    return await this.prismaService.householdUser.create({
-      data: {
-        householdId: id,
-        userId: user.id,
-      },
-    });
+    try {
+      let user = await this.prismaService.user.findUnique({
+        where: {
+          email: email,
+        },
+      });
+      return await this.prismaService.householdUser.create({
+        data: {
+          householdId: id,
+          userId: user.id,
+        },
+      });
+    } catch (err) {
+      this.logger.error(err);
+
+      throw err;
+    }
   }
   async addUserFromToken(token: string, email: string) {
-    let data = JSON.parse(await this.redisService.get(token));
-    if (data.email == email) {
-      return await this.addUser(data.email, data.id);
+    try {
+      let data = JSON.parse(await this.redisService.get(token));
+      if (data.email == email) {
+        this.redisService.delete(token);
+        return await this.addUser(data.email, data.id);
+      }
+    } catch (err) {
+      this.logger.error(err);
+
+      throw err;
     }
   }
 }
