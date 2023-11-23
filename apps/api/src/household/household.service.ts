@@ -11,7 +11,6 @@ import {
 } from './dto';
 import * as crypto from 'crypto';
 import { RedisService } from '../redis';
-import { equal } from 'assert';
 
 @Injectable()
 class HouseholdService {
@@ -64,7 +63,7 @@ class HouseholdService {
   async invite(cu: CurrentUserData, inv: InviteHouseholdRequest, id: string) {
     try {
       const token = crypto.randomBytes(64).toString('hex');
-      let redisInv = {
+      const redisInv = {
         id: id,
         email: inv.email,
       };
@@ -88,13 +87,10 @@ class HouseholdService {
     token: string
   ) {
     try {
-      let redisExpected = JSON.stringify({
-        id: id,
-        email: cu.email,
-      });
+     
       if (this.compareToken(id, cu.email, token) && accept == 'accept') {
         //create householdUser and assign user and household to it
-        let ressponse = this.addUser(cu.email, id);
+        const ressponse = this.addUser(cu.email, id);
         this.redisService.delete(token);
 
         return ressponse;
@@ -113,7 +109,7 @@ class HouseholdService {
     token: string
   ): Promise<boolean> {
     try {
-      let redisExpected = JSON.stringify({
+      const redisExpected = JSON.stringify({
         id: id,
         email: email,
       });
@@ -126,7 +122,7 @@ class HouseholdService {
   }
   async addUser(email: string, id: string) {
     try {
-      let user = await this.prismaService.user.findUnique({
+      const user = await this.prismaService.user.findUnique({
         where: {
           email: email,
         },
@@ -145,7 +141,7 @@ class HouseholdService {
   }
   async addUserFromToken(token: string, email: string) {
     try {
-      let data = JSON.parse(await this.redisService.get(token));
+      const data = JSON.parse(await this.redisService.get(token));
       if (data.email == email) {
         this.redisService.delete(token);
         return await this.addUser(data.email, data.id);
