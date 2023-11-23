@@ -21,17 +21,21 @@ class CreateHouseholdResponse {
   @IsOptional()
   image: string;
 }
-class UpdateHouseholdRequest extends PartialType(CreateHouseholdRequest){
-
-}
-class InviteHouseholdRequest{
+class UpdateHouseholdRequest extends PartialType(CreateHouseholdRequest) {}
+class InviteHouseholdRequest {
   @ApiProperty({ description: 'Email', example: 'ivanstojkovic@ivan.com' })
   @IsEmail()
-  email:string;
+  email: string;
 }
-interface RedisInv{
-  id:string,
-  email:string
+interface RedisInv {
+  id: string;
+  email: string;
 }
 
-export { CreateHouseholdRequest, CreateHouseholdResponse,UpdateHouseholdRequest,InviteHouseholdRequest,RedisInv};
+export {
+  CreateHouseholdRequest,
+  CreateHouseholdResponse,
+  UpdateHouseholdRequest,
+  InviteHouseholdRequest,
+  RedisInv,
+};

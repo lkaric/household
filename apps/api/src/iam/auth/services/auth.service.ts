@@ -25,7 +25,6 @@ import type {
 } from '../interfaces';
 import { HouseholdService } from '../../../household/household.service';
 
-
 @Injectable()
 class AuthService {
   private static REFRESH_TOKEN_PREFIX = 'rt';
@@ -42,7 +41,7 @@ class AuthService {
     private readonly householdService: HouseholdService
   ) {}
 
-  async register(payload: RegisterRequest, token?:string) {
+  async register(payload: RegisterRequest, token?: string) {
     try {
       const data: RegisterRequest = {
         ...payload,
@@ -50,8 +49,8 @@ class AuthService {
       };
 
       const user = await this.prismaService.user.create({ data });
-      console.log("token"+token);
-      if (token !== undefined && token!=="") {
+      console.log('token' + token);
+      if (token !== undefined && token !== '') {
         //add add user to household
         this.householdService.addUserFromToken(token, user.email);
       }

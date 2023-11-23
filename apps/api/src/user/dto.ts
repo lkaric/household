@@ -1,8 +1,8 @@
-import { Household, HouseholdRole, User } from "@prisma/client";
+import { Household, HouseholdRole, User } from '@prisma/client';
 
-class HousholdUserDto{
-    household:Household;
-    user:User;
-    role:HouseholdRole
+class HousholdUserDto {
+  household: Household;
+  user: User;
+  role: HouseholdRole;
 }
-export {HousholdUserDto}
+export { HousholdUserDto };
