@@ -29,5 +29,9 @@ class InviteHouseholdRequest{
   @IsEmail()
   email:string;
 }
+interface RedisInv{
+  id:string,
+  email:string
+}
 
-export { CreateHouseholdRequest, CreateHouseholdResponse,UpdateHouseholdRequest,InviteHouseholdRequest};
+export { CreateHouseholdRequest, CreateHouseholdResponse,UpdateHouseholdRequest,InviteHouseholdRequest,RedisInv};

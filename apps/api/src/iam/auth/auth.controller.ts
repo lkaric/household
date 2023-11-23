@@ -29,7 +29,7 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.CREATED, type: RegisterResponse })
   @Post('/register/:token?')
   @ApiParam({ name: 'token', required: false, description: 'token goes here' })
-  register(@Body() body: RegisterRequest, @Param() { token }) {
+  register(@Body() body: RegisterRequest, @Param('token') { token }) {
     return this.authService.register(body, token);
   }
 

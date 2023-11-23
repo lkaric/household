@@ -7,6 +7,7 @@ import { CurrentUserData } from '../iam/auth/interfaces';
 import { HouseholdService } from './household.service';
 
 import { CreateHouseholdRequest, CreateHouseholdResponse, InviteHouseholdRequest, UpdateHouseholdRequest } from './dto';
+import { HousholdUserDto } from '../user';
 
 @ApiTags('Household')
 @ApiBearerAuth('JWT')
@@ -41,7 +42,7 @@ export class HouseholdController {
     @Param(){id},
     @Body() invite : InviteHouseholdRequest,
     @CurrentUser() cu: CurrentUserData
-  ):Promise<any>{
+  ):Promise<string>{
    return  this.householdService.invite(cu,invite,id);
   }
   @Post("/:id/invite/:token/:accept")
@@ -51,7 +52,7 @@ export class HouseholdController {
   acceptInvite(
     @Param(){id,token,accept},
     @CurrentUser() cu: CurrentUserData
-  ):Promise<any>{
+  ):Promise<HousholdUserDto>{
    return  this.householdService.handleInvite(cu,accept,id,token);
   }
 

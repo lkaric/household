@@ -7,10 +7,12 @@ import {
   CreateHouseholdRequest,
   CreateHouseholdResponse,
   InviteHouseholdRequest,
+  RedisInv,
   UpdateHouseholdRequest,
 } from './dto';
-import * as crypto from 'crypto';
+import { randomBytes } from 'crypto';
 import { RedisService } from '../redis';
+import { HousholdUserDto } from '../user/dto';
 
 @Injectable()
 class HouseholdService {
@@ -60,19 +62,19 @@ class HouseholdService {
     return household;
   }
 
-  async invite(cu: CurrentUserData, inv: InviteHouseholdRequest, id: string) {
+  async invite(cu: CurrentUserData, inv: InviteHouseholdRequest, id: string):Promise<string> {
     try {
-      const token = crypto.randomBytes(64).toString('hex');
+      const token = randomBytes(64).toString('hex');
       const redisInv = {
         id: id,
         email: inv.email,
-      };
+      } as RedisInv;
       await this.redisService.insertExpire(
         token,
         JSON.stringify(redisInv),
         86400
       );
-      return { value: await this.redisService.get(token), token: token };
+      return token ;
     } catch (err) {
       this.logger.error(err);
 
@@ -85,17 +87,18 @@ class HouseholdService {
     accept: string,
     id: string,
     token: string
-  ) {
+  ) :Promise<HousholdUserDto>{
     try {
      
-      if (this.compareToken(id, cu.email, token) && accept == 'accept') {
+      if (await this.compareToken(id, cu.email, token) && accept == 'accept') {
         //create householdUser and assign user and household to it
-        const ressponse = this.addUser(cu.email, id);
+        const response = this.addUser(cu.email, id);
         this.redisService.delete(token);
+        
 
-        return ressponse;
+        return response;
       } else {
-        return 'no';
+        return null;
       }
     } catch (err) {
       this.logger.error(err);
@@ -113,14 +116,14 @@ class HouseholdService {
         id: id,
         email: email,
       });
-      return await this.redisService.areStringsEqual(token, redisExpected);
+      return  this.redisService.areStringsEqual(token, redisExpected);
     } catch (err) {
       this.logger.error(err);
 
       throw err;
     }
   }
-  async addUser(email: string, id: string) {
+  async addUser(email: string, id: string):Promise<HousholdUserDto> {
     try {
       const user = await this.prismaService.user.findUnique({
         where: {
@@ -132,6 +135,11 @@ class HouseholdService {
           householdId: id,
           userId: user.id,
         },
+        select:{
+          household:true,
+          user:true,
+          role:true
+        }
       });
     } catch (err) {
       this.logger.error(err);
