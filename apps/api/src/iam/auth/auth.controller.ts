@@ -1,5 +1,12 @@
-import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Post,
+  HttpCode,
+  HttpStatus,
+  Param,
+} from '@nestjs/common';
+import { ApiTags, ApiResponse, ApiParam } from '@nestjs/swagger';
 
 import { AuthService } from './services';
 import { Public } from './decorators';
@@ -20,9 +27,10 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiResponse({ status: HttpStatus.CREATED, type: RegisterResponse })
-  @Post('/register')
-  register(@Body() body: RegisterRequest) {
-    return this.authService.register(body);
+  @Post('/register/:token?')
+  @ApiParam({ name: 'token', required: false, description: 'token goes here' })
+  register(@Body() body: RegisterRequest, @Param('token') { token }) {
+    return this.authService.register(body, token);
   }
 
   @ApiResponse({ status: HttpStatus.OK, type: LoginResponse })

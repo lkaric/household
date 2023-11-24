@@ -23,6 +23,7 @@ import type {
   RefreshTokenPayload,
   TokenPair,
 } from '../interfaces';
+import { HouseholdService } from '../../../household/household.service';
 
 @Injectable()
 class AuthService {
@@ -36,10 +37,11 @@ class AuthService {
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
-    private readonly redisService: RedisService
+    private readonly redisService: RedisService,
+    private readonly householdService: HouseholdService
   ) {}
 
-  async register(payload: RegisterRequest) {
+  async register(payload: RegisterRequest, token?: string) {
     try {
       const data: RegisterRequest = {
         ...payload,
@@ -47,6 +49,11 @@ class AuthService {
       };
 
       const user = await this.prismaService.user.create({ data });
+      console.log('token' + token);
+      if (token !== undefined && token !== '') {
+        //add add user to household
+        this.householdService.addUserFromToken(token, user.email);
+      }
 
       const tokens = await this.generateTokenPair(user);
 
