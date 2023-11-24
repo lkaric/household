@@ -69,10 +69,10 @@ class HouseholdService {
   ): Promise<string> {
     try {
       const token = randomBytes(64).toString('hex');
-      const redisInv = {
+      const redisInv: RedisInv = {
         id: id,
         email: inv.email,
-      } as RedisInv;
+      };
       await this.redisService.insertExpire(
         token,
         JSON.stringify(redisInv),
@@ -98,7 +98,7 @@ class HouseholdService {
         accept == 'accept'
       ) {
         //create householdUser and assign user and household to it
-        const response = this.addUser(cu.email, id);
+        const response = await this.addUser(cu.email, id);
         this.redisService.delete(token);
 
         return response;
