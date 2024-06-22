@@ -54,11 +54,33 @@ model User {
   emailVerified Boolean @default(false)
   phoneVerified Boolean @default(false)
 
-  households HouseholdUser[]
+  households    HouseholdUser[]
+  createdItems  Item[]          @relation("createdBy")
+  assignedItems Item[]          @relation("assignedTo")
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
   @@map("users")
+}
+
+enum ItemType {
+  ITEM_CHORE
+  ITEM_TO_BUY
+}
+
+model Item {
+  id           String   @id @default(cuid())
+  name         String
+  description  String
+  type         ItemType
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  createdById  String
+  assignedToId String
+  createdBy    User     @relation("createdBy", fields: [createdById], references: [id])
+  assignedTo   User     @relation("assignedTo", fields: [assignedToId], references: [id])
+
+  @@map("items")
 }
