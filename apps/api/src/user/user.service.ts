@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma';
 import { plainToInstance } from 'class-transformer';
-import { UserDto, UserResponseDto } from './dto';
+import { UserDto, UserResponseDto } from './dto/dto';
 
 @Injectable()
 class UserService {

@@ -1,7 +1,7 @@
 import { Controller, Param, Get } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { UserService } from './user.service';
-import { UserResponseDto } from './dto';
+import { UserResponseDto } from './dto/dto';
 import { Public } from '../iam/auth/decorators';
 
 @ApiTags('User')

@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Household, HouseholdRole, Item, User } from '@prisma/client';
 import { Expose } from 'class-transformer';
 import {
@@ -8,7 +9,7 @@ import {
   IsString,
 } from 'class-validator';
 
-class HousholdUserDto {
+class HouseholdUserDto {
   household: Household;
   user: User;
   role: HouseholdRole;
@@ -56,30 +57,55 @@ class UserDto {
   @IsDate()
   deletedAt?: Date;
   @Expose()
-  households: HousholdUserDto[];
+  households: HouseholdUserDto[];
 
   createdItems: Item[];
 }
 class UserResponseDto {
   @Expose()
   @IsEmail()
+  @ApiProperty({
+    description: 'The email of the user',
+    example: 'user@example.com',
+  })
   email: string;
 
   @Expose()
   @IsString()
+  @ApiProperty({
+    description: 'The first name of the user',
+    example: 'John',
+  })
   firstName: string;
 
   @Expose()
   @IsString()
+  @ApiProperty({
+    description: 'The last name of the user',
+    example: 'Doe',
+  })
   lastName: string;
 
   @Expose()
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional({
+    description: 'The phone number of the user',
+    example: '+1234567890',
+  })
   phone?: string;
-  @Expose()
-  households: HousholdUserDto[];
 
+  @Expose()
+  @ApiProperty({
+    type: [HouseholdUserDto],
+    description: 'The households associated with the user',
+  })
+  households: HouseholdUserDto[];
+
+  @Expose()
+  @ApiProperty({
+    description: 'The items created by the user',
+  })
   createdItems: Item[];
 }
-export { HousholdUserDto, UserDto, UserResponseDto };
+export { HouseholdUserDto, UserDto, UserResponseDto };

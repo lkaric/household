@@ -50,7 +50,7 @@ class AuthService {
 
       const user = await this.prismaService.user.create({ data });
       console.log('token' + token);
-      if (token !== undefined && token !== '') {
+      if (token !== undefined && token !== '' && token !== ',') {
         //add add user to household
         this.householdService.addUserFromToken(token, user.email);
       }

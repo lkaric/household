@@ -12,7 +12,7 @@ import {
   InviteHouseholdRequest,
   UpdateHouseholdRequest,
 } from './dto';
-import { HousholdUserDto } from '../user';
+import { HouseholdUserDto } from '../user/dto';
 
 @ApiTags('Household')
 @ApiBearerAuth('JWT')
@@ -59,7 +59,7 @@ export class HouseholdController {
   acceptInvite(
     @Param() { id, token, accept },
     @CurrentUser() cu: CurrentUserData
-  ): Promise<HousholdUserDto> {
+  ): Promise<HouseholdUserDto> {
     return this.householdService.handleInvite(cu, accept, id, token);
   }
 }

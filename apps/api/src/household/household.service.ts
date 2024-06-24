@@ -12,7 +12,7 @@ import {
 } from './dto';
 import { randomBytes } from 'crypto';
 import { RedisService } from '../redis';
-import { HousholdUserDto } from '../user/dto';
+import { HouseholdUserDto } from '../user/dto/dto';
 
 @Injectable()
 class HouseholdService {
@@ -91,7 +91,7 @@ class HouseholdService {
     accept: string,
     id: string,
     token: string
-  ): Promise<HousholdUserDto> {
+  ): Promise<HouseholdUserDto> {
     try {
       if (
         (await this.compareToken(id, cu.email, token)) &&
@@ -128,7 +128,7 @@ class HouseholdService {
       throw err;
     }
   }
-  async addUser(email: string, id: string): Promise<HousholdUserDto> {
+  async addUser(email: string, id: string): Promise<HouseholdUserDto> {
     try {
       const user = await this.prismaService.user.findUnique({
         where: {
