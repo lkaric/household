@@ -10,6 +10,12 @@
 $ npm i -g pnpm
 ```
 
+4. Start the docker-compose
+
+```sh
+$ docker compose up -d
+```
+
 3. Install dependencies
 
 ```sh
