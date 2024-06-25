@@ -6,12 +6,9 @@ import {
   IsNotEmpty,
   IsUUID,
 } from 'class-validator';
-import { Household, User } from '@prisma/client';
+import { Household, ItemType, User } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-enum ItemType {
-  ITEM_CHORE,
-  ITEM_TO_BUY,
-}
+
 class ItemDto {
   @IsUUID()
   id: string;
@@ -80,18 +77,26 @@ class CreateItemDto {
   @ApiProperty({
     description: 'ID of the household to which the item belongs',
     type: String,
-    format: 'uuid',
-    example: 'clxrqmkws0000i0kr074i48ik',
+    example: 'clxugwyop000110dhqo9lxqbw',
   })
+  @IsString()
   householdId: string;
 }
 class AssignItemDto {
+  @ApiProperty({
+    description: 'ID of the item',
+    type: String,
+    example: 'clxuheawc00017iyw6c876gsp',
+  })
   @IsString()
-  @IsUUID()
   itemId: string;
 
+  @ApiProperty({
+    description: 'ID of the user',
+    type: String,
+    example: 'clxuic6pd0000c78m8bcerxiz',
+  })
   @IsString()
-  @IsUUID()
   userId: string;
 }
-export { ItemDto, CreateItemDto, ItemType, AssignItemDto };
+export { ItemDto, CreateItemDto, AssignItemDto };

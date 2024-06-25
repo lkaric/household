@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma';
 import { plainToInstance } from 'class-transformer';
-import { UserDto, UserResponseDto } from './dto/dto';
+import { UserResponseDto } from './dto/dto';
 
 @Injectable()
 class UserService {
@@ -23,8 +23,7 @@ class UserService {
           assignedItems: true,
         },
       });
-      console.log(user);
-      return plainToInstance(UserDto, user);
+      return plainToInstance(UserResponseDto, user);
     } catch (err) {
       this.logger.error(err);
       throw err;

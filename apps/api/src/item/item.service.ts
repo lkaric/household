@@ -10,8 +10,7 @@ export class NewService {
 
   async createItem(createItemDto: CreateItemDto, cu: CurrentUserData) {
     try {
-      const { name, description, householdId } = createItemDto;
-      const type = 'ITEM_CHORE';
+      const { name, description, householdId, type } = createItemDto;
       const it = await this.prismaService.item.create({
         data: {
           name: name,
@@ -41,6 +40,18 @@ export class NewService {
         where: { id: itemId },
         data: {
           assignedToId: userId,
+        },
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw err;
+    }
+  }
+  async deleteItem(itemId: string) {
+    try {
+      return await this.prismaService.item.delete({
+        where: {
+          id: itemId,
         },
       });
     } catch (err) {
